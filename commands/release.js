@@ -41,7 +41,7 @@ export default {
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const jailRoleName = "Jailed";
-    const logChannelName = "mod-logs";
+    const logChannelName = "mod-log";
 
     // Check if user has mod role
     if (!message.member.roles.cache.some(role => role.name === modRoleName)) {
