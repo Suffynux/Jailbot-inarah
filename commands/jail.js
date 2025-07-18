@@ -86,7 +86,7 @@ export default {
     const jailRole = message.guild.roles.cache.find(r => r.name === "Jailed");
     if (!jailRole) return message.reply("❌ 'Jailed' role not found.");
 
-    const logChannel = message.guild.channels.cache.find(ch => ch.name === "mod-logs");
+    const logChannel = message.guild.channels.cache.find(ch => ch.name === "mod-log");
     if (!logChannel) {
       console.warn("⚠️ 'mod-logs' channel not found. Skipping log.");
     }
