@@ -11,9 +11,11 @@ export default {
 
 Hey <@${message.author.id}>! I'm your server's JailBot. Here's what I can do:
 
-🔒 **!jail @user** — Sends a user to jail (removes their roles and gives them the Jailed role)
+🔒 **!jail @user** — Sends a male user to jail (removes their roles and gives them the \`Jailed\` role)
 
-🔓 **!free @user** — Frees a user from jail (restores their roles)
+🔒 **!sisterjail @user** — Sends a female user (with the \`Sis\` role) to the female jail (removes their roles and gives them the \`SisterJailed\` role)
+
+🔓 **!free @user** — Frees a jailed user (restores their roles from backup)
 
 📖 **!jailbot** — Shows this help message
 
