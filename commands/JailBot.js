@@ -1,5 +1,5 @@
 export default {
-  name: 'jailbot',
+  name: 'inarah',
   description: 'Tells you what the jail bot can do',
 
   async execute(message, args, client) {
