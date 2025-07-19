@@ -4,7 +4,7 @@ export default {
   name: 'jailsis',
   async execute(message, args, client) {
     const modRoleName = "Mod";
-    const sisterRoleName = "Sis";
+    const sisterRoleName = "Sister";
     const jailRoleName = "JailedSis";
     const logChannelName = "mod-logs";
 
