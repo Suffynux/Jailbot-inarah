@@ -67,7 +67,6 @@
 
 
 
-
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
@@ -101,6 +100,9 @@ export default {
       console.warn("⚠️ 'mod-log' channel not found. Skipping log.");
     }
 
+    // Extract reason
+    const reason = args.slice(1).join(' ') || "No reason provided.";
+
     // Save roles (excluding @everyone and jail role)
     const rolesToSave = target.roles.cache
       .filter(role => role.name !== '@everyone' && role.name !== jailRoleName)
@@ -114,14 +116,16 @@ export default {
       await target.roles.add(jailRole);
 
       // DM the user
-      await target.send("🚫 You have been jailed for misbehavior. You are now in the **male jail**.");
+      await target.send(`🚫 You have been jailed in the **male jail** by **${message.author.tag}**.\n**Reason:** ${reason}`);
 
       // Confirmation in current channel
-      await message.reply(`✅ ${target.user.tag} has been jailed to the male jail.`);
+      await message.reply(`✅ ${target.user.tag} has been jailed to the male jail.\n📌 Reason: ${reason}`);
 
       // Log to mod-log
       if (logChannel) {
-        logChannel.send(`🔒 **${target.user.tag}** was jailed (male) by **${message.author.tag}**.`);
+        logChannel.send(
+          `📛 **${target.user.tag}** was jailed by **${message.author.tag}**.\n📝 **Reason:** ${reason}`
+        );
       }
     } catch (err) {
       console.error("❌ Error jailing user:", err);
