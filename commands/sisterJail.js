@@ -1,11 +1,11 @@
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
-  name: '`femalejail`',
+  name: 'jailsis',
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const sisterRoleName = "Sis";
-    const jailRoleName = "SisterJailed";
+    const jailRoleName = "JailedSis";
     const logChannelName = "mod-logs";
 
     if (!message.member.roles.cache.some(role => role.name === modRoleName)) {
