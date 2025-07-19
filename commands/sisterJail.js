@@ -6,7 +6,7 @@ export default {
     const modRoleName = "Mod";
     const sisterRoleName = "Sister";
     const jailRoleName = "JailedSis";
-    const logChannelName = "mod-logs";
+    const logChannelName = "mod-log";
 
     if (!message.member.roles.cache.some(role => role.name === modRoleName)) {
       return message.reply("❌ You don't have permission to use this.");
