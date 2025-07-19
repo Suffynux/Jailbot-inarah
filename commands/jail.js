@@ -73,8 +73,13 @@ import { saveJailedData } from '../utils/jailUtils.js';
 export default {
   name: 'jailbro',
   async execute(message, args, client) {
-    // Check if user has permission
-    if (!message.member.roles.cache.some(role => role.name === "Mod")) {
+    const modRoleName = "Mod";
+    const brotherRoleName = "Brother";
+    const jailRoleName = "JailedBro";
+    const logChannelName = "mod-log";
+
+    // Check if user has Mod role
+    if (!message.member.roles.cache.some(role => role.name === modRoleName)) {
       return message.reply("❌ You don't have permission to use this command.");
     }
 
@@ -83,31 +88,44 @@ export default {
       return message.reply("⚠️ Please mention a valid user to jail.");
     }
 
-    const jailRole = message.guild.roles.cache.find(r => r.name === "JailedBro");
-    if (!jailRole) return message.reply("❌ 'Jailed' role not found.");
-
-    const logChannel = message.guild.channels.cache.find(ch => ch.name === "mod-log");
-    if (!logChannel) {
-      console.warn("⚠️ 'mod-logs' channel not found. Skipping log.");
+    // Check if target has Brother role
+    if (!target.roles.cache.some(role => role.name === brotherRoleName)) {
+      return message.reply("❌ That user doesn't have the Brother role.");
     }
 
-    // Save current roles (except @everyone and Jailed)
+    const jailRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
+    if (!jailRole) return message.reply("❌ 'JailedBro' role not found.");
+
+    const logChannel = message.guild.channels.cache.find(c => c.name === logChannelName && c.isTextBased());
+    if (!logChannel) {
+      console.warn("⚠️ 'mod-log' channel not found. Skipping log.");
+    }
+
+    // Save roles (excluding @everyone and jail role)
     const rolesToSave = target.roles.cache
-      .filter(role => role.name !== '@everyone' && role.name !== 'JailedBro')
+      .filter(role => role.name !== '@everyone' && role.name !== jailRoleName)
       .map(role => role.id);
 
-    // Store in jailedUsers.json
     saveJailedData(target.id, rolesToSave);
 
-    // Remove all current roles and assign only Jailed
-    await target.roles.set([jailRole]);
+    try {
+      // Remove roles and add jail role
+      await target.roles.remove(rolesToSave);
+      await target.roles.add(jailRole);
 
-    // Confirmation in the current channel
-    await message.channel.send(`🚫 <@${target.id}> has been jailed.`);
+      // DM the user
+      await target.send("🚫 You have been jailed for misbehavior. You are now in the **male jail**.");
 
-    // Send log to mod-logs channel
-    if (logChannel) {
-      logChannel.send(`📛 <@${target.id}> has been **jailed** by <@${message.author.id}>.`);
+      // Confirmation in current channel
+      await message.reply(`✅ ${target.user.tag} has been jailed to the male jail.`);
+
+      // Log to mod-log
+      if (logChannel) {
+        logChannel.send(`🔒 **${target.user.tag}** was jailed (male) by **${message.author.tag}**.`);
+      }
+    } catch (err) {
+      console.error("❌ Error jailing user:", err);
+      message.reply("❌ Something went wrong while jailing the user.");
     }
   }
 };
