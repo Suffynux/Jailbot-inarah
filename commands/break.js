@@ -5,7 +5,6 @@ export default {
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const breakRoleName = "Break";
-    const jailRoleName = "Jailed";
     const logChannelName = "mod-log";
 
     // Check if user has Mod role
@@ -20,14 +19,6 @@ export default {
 
     const breakRole = message.guild.roles.cache.find(r => r.name === breakRoleName);
     if (!breakRole) return message.reply("❌ 'Break' role not found.");
-
-    const jailRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
-    if (!jailRole) return message.reply("❌ 'Jailed' role not found.");
-
-    // 🚫 Prevent breaking a jailed user
-    if (target.roles.cache.has(jailRole.id)) {
-      return message.reply("❌ You can't send this user on Break because they are already jailed.");
-    }
 
     const logChannel = message.guild.channels.cache.find(c => c.name === logChannelName && c.isTextBased());
     if (!logChannel) {

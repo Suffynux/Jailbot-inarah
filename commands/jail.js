@@ -65,6 +65,8 @@
 //   }
 // };
 
+
+
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
@@ -73,7 +75,6 @@ export default {
     const modRoleName = "Mod";
     const brotherRoleName = "Brother";
     const jailRoleName = "JailedBro";
-    const breakRoleName = "Break";
     const logChannelName = "mod-log";
 
     // Check if user has Mod role
@@ -91,11 +92,6 @@ export default {
       return message.reply("❌ That user doesn't have the Brother role.");
     }
 
-    // ❗️Check if user already has Break role
-    if (target.roles.cache.some(role => role.name === breakRoleName)) {
-      return message.reply("⛔ You cannot jail someone who is currently on a break.");
-    }
-
     const jailRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
     if (!jailRole) return message.reply("❌ 'JailedBro' role not found.");
 
@@ -104,8 +100,10 @@ export default {
       console.warn("⚠️ 'mod-log' channel not found. Skipping log.");
     }
 
+    // Extract reason
     const reason = args.slice(1).join(' ') || "No reason provided.";
 
+    // Save roles (excluding @everyone and jail role)
     const rolesToSave = target.roles.cache
       .filter(role => role.name !== '@everyone' && role.name !== jailRoleName)
       .map(role => role.id);
@@ -113,12 +111,17 @@ export default {
     saveJailedData(target.id, rolesToSave);
 
     try {
+      // Remove roles and add jail role
       await target.roles.remove(rolesToSave);
       await target.roles.add(jailRole);
 
+      // DM the user
       await target.send(`🚫 You have been jailed in the **male jail** by **${message.author.tag}**.\n**Reason:** ${reason}`);
+
+      // Confirmation in current channel
       await message.reply(`✅ ${target.user.tag} has been jailed to the male jail.\n📌 Reason: ${reason}`);
 
+      // Log to mod-log
       if (logChannel) {
         logChannel.send(
           `📛 **${target.user.tag}** was jailed by **${message.author.tag}**.\n📝 **Reason:** ${reason}`
