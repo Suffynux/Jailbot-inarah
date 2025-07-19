@@ -70,7 +70,7 @@
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
-  name: 'jailbro',
+  name: 'jailm',
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const brotherRoleName = "Brother";
