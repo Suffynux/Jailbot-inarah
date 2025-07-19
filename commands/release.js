@@ -82,7 +82,7 @@ export default {
   name: 'free',
   async execute(message, args, client) {
     const modRoleName = "Mod";
-    const jailRoleNames = ["JailedBro", "JailedSis"];
+    const jailRoleNames = ["JailedBro", "JailedSis" , "Break"];
     const logChannelName = "mod-log";
 
     // Check if user has mod role
