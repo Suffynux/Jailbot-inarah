@@ -1,13 +1,13 @@
+import { saveJailedData } from '../utils/jailUtils.js';
+
 export default {
   name: 'sisterjail',
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const sisterRoleName = "Sis";
-    const jailRoleName = "Jailed";
-    const femaleJailChannel = "female-jail"; // channel name
+    const jailRoleName = "SisterJailed";
     const logChannelName = "mod-logs";
 
-    // Check if user has permission
     if (!message.member.roles.cache.some(role => role.name === modRoleName)) {
       return message.reply("❌ You don't have permission to use this.");
     }
@@ -15,31 +15,38 @@ export default {
     const user = message.mentions.members.first();
     if (!user) return message.reply("❌ Please mention a user to jail.");
 
-    // Check if user has the Sister role
     if (!user.roles.cache.some(role => role.name === sisterRoleName)) {
       return message.reply("❌ That user doesn't have the Sister role.");
     }
 
-    // Save user's roles somewhere before removing (for future restore)
-    const originalRoles = user.roles.cache.map(role => role.id).filter(id => id !== message.guild.id);
-    // Store to your DB or temporary file
-    // await saveJailedData(user.id, originalRoles);
+    // Save roles (excluding @everyone and the jail role)
+    const originalRoles = user.roles.cache
+      .filter(role => role.name !== '@everyone' && role.name !== jailRoleName)
+      .map(role => role.id);
 
-    // Remove all roles
-    await user.roles.remove(originalRoles);
+    saveJailedData(user.id, originalRoles); // ⬅️ Save roles to JSON
 
-    // Add Jailed role
-    const jailedRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
-    if (jailedRole) await user.roles.add(jailedRole);
+    try {
+      // Remove original roles
+      await user.roles.remove(originalRoles);
 
-    // Send to mod-log
-    const logChannel = message.guild.channels.cache.find(c => c.name === logChannelName);
-    if (logChannel) {
-      logChannel.send(`🔒 ${user} was jailed (female) by ${message.author}`);
+      // Add SisterJailed role
+      const jailedRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
+      if (!jailedRole) return message.reply("❌ 'SisterJailed' role not found.");
+      await user.roles.add(jailedRole);
+
+      // Log to mod-logs
+      const logChannel = message.guild.channels.cache.find(c => c.name === logChannelName && c.isTextBased());
+      if (logChannel) {
+        logChannel.send(`🔒 **${user.user.tag}** was jailed (female) by **${message.author.tag}**.`);
+      }
+
+      // DM user
+      await user.send("🚫 You have been jailed in the **female jail**.");
+      message.reply(`✅ ${user.user.tag} has been jailed to the female jail.`);
+    } catch (err) {
+      console.error("❌ Error jailing user:", err);
+      message.reply("❌ Something went wrong.");
     }
-
-    
-//     // Optional: DM user
-//     user.send("You have been jailed in the **female jail** channel.");
   }
 };
