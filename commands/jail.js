@@ -74,7 +74,7 @@ export default {
   name: 'jail',
   async execute(message, args, client) {
     // Check if user has permission
-    if (!message.member.roles.cache.some(role => role.name === "Moderation Division")) {
+    if (!message.member.roles.cache.some(role => role.name === "Mod")) {
       return message.reply("❌ You don't have permission to use this command.");
     }
 

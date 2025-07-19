@@ -3,7 +3,7 @@ import { saveJailedData } from '../utils/jailUtils.js';
 export default {
   name: '`femalejail`',
   async execute(message, args, client) {
-    const modRoleName = "Moderation Division";
+    const modRoleName = "Mod";
     const sisterRoleName = "Sis";
     const jailRoleName = "SisterJailed";
     const logChannelName = "mod-logs";
