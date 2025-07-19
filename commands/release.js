@@ -81,7 +81,7 @@ import path from 'path';
 export default {
   name: 'free',
   async execute(message, args, client) {
-    const modRoleName = "Mod";
+    const modRoleName = "Moderation Division";
     const jailRoleNames = ["Jailed", "SisterJailed"];
     const logChannelName = "mod-log";
 
