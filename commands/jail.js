@@ -83,7 +83,7 @@ export default {
       return message.reply("⚠️ Please mention a valid user to jail.");
     }
 
-    const jailRole = message.guild.roles.cache.find(r => r.name === "Jailed");
+    const jailRole = message.guild.roles.cache.find(r => r.name === "JailedBro");
     if (!jailRole) return message.reply("❌ 'Jailed' role not found.");
 
     const logChannel = message.guild.channels.cache.find(ch => ch.name === "mod-log");
@@ -93,7 +93,7 @@ export default {
 
     // Save current roles (except @everyone and Jailed)
     const rolesToSave = target.roles.cache
-      .filter(role => role.name !== '@everyone' && role.name !== 'Jailed')
+      .filter(role => role.name !== '@everyone' && role.name !== 'JailedBro')
       .map(role => role.id);
 
     // Store in jailedUsers.json
