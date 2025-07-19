@@ -1,5 +1,5 @@
 export default {
-  name: 'malejail',
+  name: 'guardInfo',
   description: 'Tells you what the jail bot can do',
 
   async execute(message, args, client) {
@@ -17,7 +17,7 @@ Hey <@${message.author.id}>! I'm your server's JailBot. Here's what I can do:
 
 🔓 **!free @user** — Frees a jailed user (restores their roles from backup)
 
-📖 **!jailbot** — Shows this help message
+📖 **!guardInfo** — Shows this help message
 
 📌 Only users with the **Mod** role can use jail/free commands.
 
