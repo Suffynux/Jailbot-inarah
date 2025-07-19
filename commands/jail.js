@@ -71,7 +71,7 @@
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
-  name: 'jail',
+  name: 'jailmale',
   async execute(message, args, client) {
     // Check if user has permission
     if (!message.member.roles.cache.some(role => role.name === "Mod")) {

@@ -1,7 +1,7 @@
 import { saveJailedData } from '../utils/jailUtils.js';
 
 export default {
-  name: 'sisterjail',
+  name: 'femalejail',
   async execute(message, args, client) {
     const modRoleName = "Mod";
     const sisterRoleName = "Sis";
@@ -42,7 +42,7 @@ export default {
       }
 
       // DM user
-      await user.send("🚫 You have been jailed in the **female jail**.");
+      await user.send("🚫 you have been jailed for talking too much... , you have been jailed in the **female jail**.");
       message.reply(`✅ ${user.user.tag} has been jailed to the female jail.`);
     } catch (err) {
       console.error("❌ Error jailing user:", err);
