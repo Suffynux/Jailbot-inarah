@@ -19,31 +19,40 @@ export default {
       return message.reply("❌ That user doesn't have the Sister role.");
     }
 
-    // Save roles (excluding @everyone and the jail role)
+    // Extract the reason
+    const reason = args.slice(1).join(" ") || "No reason provided.";
+
+    // Save roles (excluding @everyone and jail role)
     const originalRoles = user.roles.cache
       .filter(role => role.name !== '@everyone' && role.name !== jailRoleName)
       .map(role => role.id);
 
-    saveJailedData(user.id, originalRoles); // ⬅️ Save roles to JSON
+    saveJailedData(user.id, originalRoles); // Save roles to JSON
 
     try {
       // Remove original roles
       await user.roles.remove(originalRoles);
 
-      // Add SisterJailed role
+      // Add jail role
       const jailedRole = message.guild.roles.cache.find(r => r.name === jailRoleName);
-      if (!jailedRole) return message.reply("❌ 'SisterJailed' role not found.");
+      if (!jailedRole) return message.reply("❌ 'JailedSis' role not found.");
       await user.roles.add(jailedRole);
 
-      // Log to mod-logs
-      const logChannel = message.guild.channels.cache.find(c => c.name === logChannelName && c.isTextBased());
-      if (logChannel) {
-        logChannel.send(`🔒 **${user.user.tag}** was jailed (female) by **${message.author.tag}**.`);
-      }
+      // DM user with reason
+      await user.send(`🚫 You have been jailed in the **female jail**.\n\n**Reason:** ${reason}`);
 
-      // DM user
-      await user.send("🚫 you have been jailed for talking too much... , you have been jailed in the **female jail**.");
+      // Confirmation message
       message.reply(`✅ ${user.user.tag} has been jailed to the female jail.`);
+
+      // Log to mod-log
+      const logChannel = message.guild.channels.cache.find(
+        c => c.name === logChannelName && c.isTextBased()
+      );
+      if (logChannel) {
+        logChannel.send(
+          `📛 **${user.user.tag}** was jailed (female) by **${message.author.tag}**.\n**Reason:** ${reason}`
+        );
+      }
     } catch (err) {
       console.error("❌ Error jailing user:", err);
       message.reply("❌ Something went wrong.");
